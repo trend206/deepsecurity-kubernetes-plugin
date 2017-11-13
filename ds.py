@@ -46,7 +46,7 @@ try:
                     node_obj = Node(node_info[0], node_info[1], node_info[2], node_info[3], node_info[4], ds_host_detail['Agent Status'],
                                     ds_host_detail['AM'], ds_host_detail['WR'], ds_host_detail['DPI'], ds_host_detail['FW'], ds_host_detail['IM'], ds_host_detail['LI'], ds_host_detail['TUM'])
                     node_objs.append(node_obj)
-                    add_details = [node.os, node.container_runtime, ds_host_detail['Agent Status'],ds_host_detail['AM'], ds_host_detail['WR'],ds_host_detail['DPI'], ds_host_detail['FW'], ds_host_detail['IM'], ds_host_detail['LI'], ds_host_detail['TUM']]
+                    add_details = [node.os, node.container_runtime, ds_host_detail['Agent Status'][:16],ds_host_detail['AM'], ds_host_detail['WR'],ds_host_detail['DPI'], ds_host_detail['FW'], ds_host_detail['IM'], ds_host_detail['LI'], ds_host_detail['TUM']]
                     node_info = node_info + add_details
 
         if len(node_info) == 5:
