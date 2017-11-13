@@ -1,0 +1,8 @@
+name: "ds"
+shortDesc: "get nodes and displays DeepSecurity status"
+longDesc: >
+  Aging shows pods from the current namespace by age.
+  Once we have plugin support for global flags through 
+  env vars (planned for V1) we'll be able to switch
+  between namespaces using the --namespace flag.
+command: ./ds.py
