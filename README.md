@@ -13,4 +13,4 @@ kubectl plugin ds
 
 
 #sample output
-![Alt text](https://www.dropbox.com/s/tfjxke4zg471frn/ds_kubectl_plugin.png "Optional title")
+![Alt text](https://www.dropbox.com/s/tfjxke4zg471frn/ds_kubectl_plugin.jpg "Optional title")
