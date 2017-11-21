@@ -3,7 +3,5 @@ shortDesc: "Deep Security kubectl plugin"
 longDesc: >
  Deep Security kubectl plugin
 command: ./ds.py
-flags:
-  - name: "help"
-    desc: "help"
+
 
