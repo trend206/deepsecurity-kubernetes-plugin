@@ -19,13 +19,15 @@ def cli():
 @cli.command()
 @click.argument('name', default="my-k8s-cluster")
 def create_connector(name):
+    """'name' creates a k8s connector in the dsm."""
     utils = Utils()
     print(utils.create_connector(name))
     utils.end_session()
 
 
 @cli.command()
-def nodes():
+def status():
+    """displays cluster status"""
     try:
         print()
         utils = Utils()
