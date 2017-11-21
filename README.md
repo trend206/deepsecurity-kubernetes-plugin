@@ -12,8 +12,8 @@ Deep Security Kubernetes (kubectl) Plugin
 
 ## Usage
 Commands:<br/>
-    create_connector     'name'        creates a k8s connector in the dsm<br/>
-    status               displays      cluster status<br/><br/>
+    create_connector<br/>
+    status<br/><br/>
 
 kubectl plugin ds status<br/>
 kubectl plugin ds create_connector "myk8sconnector"<br/>
