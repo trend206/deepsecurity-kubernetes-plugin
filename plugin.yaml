@@ -4,6 +4,6 @@ longDesc: >
  Deep Security kubectl plugin
 command: ./ds.py
 flags:
-  - name: "create"
-    desc: "creates a k8s connector in the dsm"
+  - name: "help"
+    desc: "help"
 
