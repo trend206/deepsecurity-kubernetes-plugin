@@ -1,5 +1,5 @@
 ds_username: admin
-ds_host: 192.168.0.20
+ds_host: 192.168.8.12
 ds_port: 4119
 
 #if using dsas

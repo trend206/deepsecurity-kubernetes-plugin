@@ -1,8 +1,9 @@
 name: "ds"
-shortDesc: "get nodes and displays DeepSecurity status"
+shortDesc: "Deep Security kubectl plugin"
 longDesc: >
-  Aging shows pods from the current namespace by age.
-  Once we have plugin support for global flags through 
-  env vars (planned for V1) we'll be able to switch
-  between namespaces using the --namespace flag.
+ Deep Security kubectl plugin
 command: ./ds.py
+flags:
+  - name: "create"
+    desc: "creates a k8s connector in the dsm"
+

@@ -6,10 +6,12 @@ from datetime import datetime
 from dsp3.models.manager import Manager
 from kubernetes import client, config
 
-def get_kubernetes_api_object():
-    config.load_kube_config()
-    v1 = client.CoreV1Api()
-    return v1
+from kube_interface import KubeInterface
+
+from models import KubeNode, Node
+
+kube_interface = KubeInterface()
+
 
 def get_host_details(dsm, host_id):
     status = {}
@@ -66,3 +68,41 @@ def get_ds_api_object(config, kube_api):
         dsm = Manager(username=username, password=password, host=host, port=port)
 
     return dsm
+
+
+def _does_connector_exist(dsm, name):
+    connector_exists = False
+    id = None
+    host_groups = dsm.host_group_retrieve_all()
+    exists = [x for x in host_groups if x['name'] == name]
+    if len(exists) > 0:
+        connector_exists = True
+        id = exists[0]['ID']
+
+    return (connector_exists , id)
+
+def dshosts_that_map_to_kubenodes(dsm):
+    ids = []
+    ds_hosts = dsm.host_retrieve_all()
+    kube_nodes = kube_interface.get_nodes()
+
+    for node in kube_nodes:
+        for address in node.addresses:
+            exists = [x for x in ds_hosts if x['displayName'] == address]
+
+            if exists and exists[0]:
+                ids.append(exists[0]['ID'])
+
+    return ids
+
+
+def create_connector(dsm, name):
+    exists, id = _does_connector_exist(dsm, name)
+    if not exists:
+        hg = dsm.host_group_create(name=name)
+        ids = dshosts_that_map_to_kubenodes(dsm)
+        dsm.host_move_to_hosts_group(ids, hg['ID'])
+        return "Kubernetes connector %s created succesfully" % name
+    else:
+        return "Kubernetes connector with that name already exists"
+
