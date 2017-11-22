@@ -101,6 +101,34 @@ class Utils():
 
         return ids
 
+    def sync_connector(self):
+        group_id = self.get_master_group_id()
+        if group_id:
+            ids = self.dshosts_that_map_to_kubenodes()
+            self.dsm.host_move_to_hosts_group(ids, group_id)
+            print("%s connector sync complete" % self.get_connector_name(group_id))
+        else:
+            print("Connector does not exist. Please run kubectl plugin ds create_connector 'name'")
+
+
+    def get_connector_name(self, group_id):
+        return self.dsm.host_group_retrieve_by_id(group_id)['name']
+
+    def get_master_group_id(self):
+        group_id = None
+        kube_nodes = kube_interface.get_nodes()
+        ds_hosts = self.dsm.host_retrieve_all()
+        master = None
+
+        for node in kube_nodes:
+            if node.role == 'master':
+                master = node
+                for address in node.addresses:
+                    exists = [x for x in ds_hosts if x['displayName'] == address or x['name'] == address]
+                    if exists and exists[0]:
+                        group_id = exists[0]['hostGroupID']
+
+        return group_id
 
     def create_connector(self, name):
         exists, id = self._does_connector_exist(name)

@@ -20,9 +20,30 @@ def cli():
 @click.argument('name', default="my-k8s-cluster")
 def create_connector(name):
     """'name' creates a k8s connector in the dsm."""
-    utils = Utils()
-    print(utils.create_connector(name))
-    utils.end_session()
+    try:
+        utils = Utils()
+        print(utils.create_connector(name))
+        utils.end_session()
+    except urllib.error.URLError as urle:
+        print("Unable to connect to the Deep Security Manager.")
+        print("Please make sure the server is up.")
+    except Exception as e:
+        print("--------------------------------------------------")
+        print(type(e))
+
+
+@cli.command()
+def sync_connector():
+    try:
+        utils = Utils()
+        utils.sync_connector()
+        utils.end_session()
+    except urllib.error.URLError as urle:
+        print("Unable to connect to the Deep Security Manager.")
+        print("Please make sure the server is up.")
+    except Exception as e:
+        print("--------------------------------------------------")
+        print(type(e))
 
 
 @cli.command()
@@ -47,9 +68,9 @@ def status():
                 if exists and exists[0]:
                     ds_host_detail = utils.get_host_details(exists[0]['ID'])
                     if ds_host_detail:
-                        node_obj = Node(node_info[0], node_info[1], node_info[2], node_info[3], node_info[4], ds_host_detail['Agent Status'],
-                                        ds_host_detail['AM'], ds_host_detail['WR'], ds_host_detail['DPI'], ds_host_detail['FW'], ds_host_detail['IM'], ds_host_detail['LI'], ds_host_detail['TUM'])
-                        node_objs.append(node_obj)
+                        #node_obj = Node(node_info[0], node_info[1], node_info[2], node_info[3], node_info[4], ds_host_detail['Agent Status'],
+                                       # ds_host_detail['AM'], ds_host_detail['WR'], ds_host_detail['DPI'], ds_host_detail['FW'], ds_host_detail['IM'], ds_host_detail['LI'], ds_host_detail['TUM'])
+                        #node_objs.append(node_obj)
                         add_details = [node.os, node.container_runtime, ds_host_detail['Agent Status'][:16],ds_host_detail['AM'], ds_host_detail['WR'],ds_host_detail['DPI'], ds_host_detail['FW'], ds_host_detail['IM'], ds_host_detail['LI'], ds_host_detail['TUM']]
                         node_info = node_info + add_details
 
