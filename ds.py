@@ -18,7 +18,7 @@ def cli():
 
 @cli.command()
 @click.argument('name', default="my-k8s-cluster")
-def create_connector(name):
+def connector_create(name):
     """'name' creates a k8s connector in the dsm."""
     try:
         utils = Utils()
@@ -33,7 +33,7 @@ def create_connector(name):
 
 
 @cli.command()
-def sync_connector():
+def connector_sync():
     """synchronizes any new kubernetes nodes with exisiting connector"""
     try:
         utils = Utils()

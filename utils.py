@@ -108,7 +108,7 @@ class Utils():
             self.dsm.host_move_to_hosts_group(ids, group_id)
             print("%s connector sync complete" % self.get_connector_name(group_id))
         else:
-            print("Connector does not exist. Please run kubectl plugin ds create_connector 'name'")
+            print("Connector does not exist. Please run kubectl plugin ds connector_create 'name'")
 
 
     def get_connector_name(self, group_id):
