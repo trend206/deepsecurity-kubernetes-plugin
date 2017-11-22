@@ -34,6 +34,7 @@ def create_connector(name):
 
 @cli.command()
 def sync_connector():
+    """synchronizes any new kubernetes nodes with exisiting connector"""
     try:
         utils = Utils()
         utils.sync_connector()
