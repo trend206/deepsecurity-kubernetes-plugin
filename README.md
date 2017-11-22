@@ -12,7 +12,6 @@ Deep Security Kubernetes (kubectl) Plugin
 
 ## Usage
 Commands:<br/><br/>
-
 kubectl plugin ds status<br/>
 kubectl plugin ds create_connector "myk8sconnector"<br/>
 kubectl plugin ds sync_connector<br/>
