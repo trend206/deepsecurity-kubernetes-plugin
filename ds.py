@@ -14,12 +14,13 @@ from models import KubeNode, Node
 
 @click.group()
 def cli():
+    """Welcome to the Deep Security kubectl plugin."""
     pass
 
 @cli.command()
 @click.argument('name', default="my-k8s-cluster")
 def connector_create(name):
-    """'name' creates a k8s connector in the dsm."""
+    """'name' creates a k8s connector in your dsm"""
     try:
         utils = Utils()
         print(utils.create_connector(name))
@@ -34,7 +35,7 @@ def connector_create(name):
 
 @cli.command()
 def connector_sync():
-    """synchronizes any new kubernetes nodes with exisiting connector"""
+    """synchronizes new kubernetes nodes with connector"""
     try:
         utils = Utils()
         utils.sync_connector()
@@ -50,7 +51,7 @@ def connector_sync():
 
 @cli.command()
 def status():
-    """displays cluster status"""
+    """displays cluster security status"""
     try:
         print()
         utils = Utils()
