@@ -44,6 +44,7 @@ def sync_connector():
     except Exception as e:
         print("--------------------------------------------------")
         print(type(e))
+        print(e)
 
 
 @cli.command()
