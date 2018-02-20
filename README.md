@@ -14,8 +14,9 @@ Deep Security Kubernetes (kubectl) Plugin
 
 ## Usage
 Commands:<br/><br/>
-kubectl plugin ds status<br/>
-kubectl plugin ds connector_create "myk8sconnector"   #will move ds computers with names matching k8s node names into group<br/>
+kubectl plugin ds status<br/><br/>
+#will move ds computers with names matching k8s node names into group<br/>
+kubectl plugin ds connector_create "myk8sconnector"<br/><br/>
 kubectl plugin ds connector_sync<br/>
 
 
