@@ -2,6 +2,10 @@
 Deep Security Kubernetes (kubectl) Plugin
 ====
 
+Note: This is an example plugin that demonstrates how easy it is to integrate cluster security policy visibility into kubectl
+      with the Deep Security APIs.
+
+
 ## Installation
 1. clone repo to your ~/.kube/plugins directory
 2. pip install -r requirements.txt
@@ -16,8 +20,8 @@ Deep Security Kubernetes (kubectl) Plugin
 Commands:<br/><br/>
 kubectl plugin ds status<br/><br/>
 #will move ds computers with names matching k8s node names into group<br/>
-kubectl plugin ds connector_create "myk8sconnector"<br/><br/>
-kubectl plugin ds connector_sync<br/>
+kubectl plugin ds assign_policy policyname<br/><br/>
+kubectl plugin ds assign_policy policyname nodename<br/>
 
 
 

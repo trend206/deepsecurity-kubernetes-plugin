@@ -33,6 +33,32 @@ class KubeInterface():
         return kube_node_objs
 
 
+    def get_node(self, name):
+        kubernetes_nodes = self.api.list_node().items
+        kube_node = None
+
+        for node in kubernetes_nodes:
+            addresses = []
+
+            if node.metadata.name == name:
+                for address in node.status.addresses:
+                    addresses.append(address.address)
+
+                kube_node = KubeNode(node.metadata.name, addresses, node.status.node_info.os_image,
+                                     node.status.node_info.container_runtime_version,
+                                     node.status.node_info.kubelet_version,
+                                     node.status.conditions[len(node.status.conditions) - 1].type,
+                                     self._calculate_age(node.metadata.creation_timestamp),
+                                     self._get_node_role(node.metadata.labels))
+
+
+                break
+
+        return kube_node
+
+
+
+
     def _get_node_role(self, labels):
         role = "<none>"
         for label in labels:

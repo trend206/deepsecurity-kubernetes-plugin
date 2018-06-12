@@ -1,7 +1,7 @@
-ds_username: admin
-ds_host: 192.168.8.12
+ds_username: username
+ds_host: 10.10.10.10
 ds_port: 4119
 
 #if using dsas
-using_dsas: no   #change to yes if using dsas
-dsas_tenant:
+using_dsas: yes   #change to yes if using dsas
+dsas_tenant: ACME Corp

@@ -22,8 +22,10 @@ class Utils():
     def get_host_details(self, host_id):
         status = {}
         host = self.dsm.host_status(host_id)
+        host_detail = self.dsm.host_detail_retrieve(host_id=host_id)
 
         status['Agent Status'] = host['overallStatus']
+        status['Policy'] = host_detail['securityProfileName']
         status['AM'] = "Off" if "Off" in host['overallAntiMalwareStatus'] else "On"
         status['WR'] = "Off" if "Off" in host['overallWebReputationStatus'] else "On"
         status['DPI'] = "Off" if "Off" in host['overallDpiStatus'] else "On"
@@ -94,21 +96,63 @@ class Utils():
 
         for node in kube_nodes:
             for address in node.addresses:
-                exists = [x for x in ds_hosts if x['displayName'] == address]
+                exists = [x for x in ds_hosts if x['displayName'] == address or x['name'] == address]
 
                 if exists and exists[0]:
                     ids.append(exists[0]['ID'])
 
         return ids
 
+    def get_node(self, name):
+        ids = []
+        ds_hosts = self.dsm.host_retrieve_all()
+        kube_node = kube_interface.get_node(name)
+
+        if kube_node is not None:
+            for address in kube_node.addresses:
+                exists = [x for x in ds_hosts if x['displayName'] == address or x['name'] == address]
+
+                if exists and exists[0]:
+                    ids.append(exists[0]['ID'])
+
+                break
+
+        return ids
+
     def sync_connector(self):
-        group_id = self.get_master_group_id()
-        if group_id:
+
+        try:
+            group_id = self.get_master_group_id()
+            if group_id:
+                ids = self.dshosts_that_map_to_kubenodes()
+                resp = self.dsm.host_move_to_hosts_group(ids, group_id)
+                print("RESP: ", resp.__dict__)
+                print("%s connector sync complete" % self.get_connector_name(group_id))
+            else:
+                print("Connector does not exist. Please run kubectl plugin ds connector_create 'name'")
+        except Exception as ex:
+            print("EX:", ex)
+
+    def assign_cluster_policy(self, name, node):
+        ids = []
+
+        if node == 'all':
             ids = self.dshosts_that_map_to_kubenodes()
-            self.dsm.host_move_to_hosts_group(ids, group_id)
-            print("%s connector sync complete" % self.get_connector_name(group_id))
         else:
-            print("Connector does not exist. Please run kubectl plugin ds connector_create 'name'")
+            ids = self.get_node(node)
+
+        if len(ids) > 0:
+            profile = self.dsm.get_security_profile_by_name(name)
+
+            if profile is not None:
+                for id in ids:
+                    self.dsm.security_profile_assign_to_host(profile['ID'], id)
+
+                self.dsm.host_update_now(ids)
+            else:
+                print("ERROR: Security Policy with name %s not found" % name)
+        else:
+            print("ERROR: Node %s not found" % node)
 
 
     def get_connector_name(self, group_id):
@@ -131,14 +175,20 @@ class Utils():
         return group_id
 
     def create_connector(self, name):
-        exists, id = self._does_connector_exist(name)
-        if not exists:
-            hg = self.dsm.host_group_create(name=name)
-            ids = self.dshosts_that_map_to_kubenodes()
-            self.dsm.host_move_to_hosts_group(ids, hg['ID'])
-            return "Kubernetes connector %s created succesfully" % name
-        else:
-            return "Kubernetes connector with that name already exists"
+        try:
+            exists, id = self._does_connector_exist(name)
+            if not exists:
+                hg = self.dsm.host_group_create(name=name)
+                ids = self.dshosts_that_map_to_kubenodes()
+
+                for id in ids:
+                    print(self.dsm.host_detail_retrieve(host_id=id))
+                self.dsm.host_move_to_hosts_group(ids, hg['ID'])
+                print("Kubernetes connector %s created succesfully" % name)
+            else:
+                print("Kubernetes connector with that name already exists")
+        except Exception as ex:
+            print("EX:", ex)
 
     def end_session(self):
         self.dsm.end_session()
