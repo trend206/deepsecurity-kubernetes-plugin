@@ -19,8 +19,8 @@ Note: This is an example plugin that demonstrates how easy it is to integrate cl
 ## Usage
 Commands:<br/><br/>
 kubectl plugin ds status<br/><br/>
-#will move ds computers with names matching k8s node names into group<br/>
-kubectl plugin ds assign_policy policyname<br/><br/>
+#will assign policy to all nodes or single node if node name specified<br/>
+kubectl plugin ds assign_policy policyname<br/>
 kubectl plugin ds assign_policy policyname nodename<br/>
 
 
